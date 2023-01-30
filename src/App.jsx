@@ -1,31 +1,26 @@
-import { useState, useEffect } from "react";
-import readXlsxFile from "read-excel-file";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SheetNamesProvider } from "./context/SheetNamesContext";
 
-import "./App.css";
+import AppLayout from "./layouts/AppLayout";
+import Index from "./pages/Index";
+import MonthDetail from "./pages/MonthDetail";
+import NotFound from "./pages/NotFound";
 
 function App() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  useEffect(() => {
-    if (selectedFile && selectedFile?.name.includes(".xlsx")) {
-      readXlsxFile(selectedFile).then((rows) => {
-        console.log(rows);
-      });
-    }
-  }, [selectedFile]);
-
   return (
-    <div className="App">
-      <h1>Vite + React</h1>
-      <div className="card">
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-      <input type="file" onChange={(e) => setSelectedFile(e.target.files[0])} />
-    </div>
+    <>
+      <BrowserRouter>
+        <SheetNamesProvider>
+          <Routes>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<Index />}></Route>
+              <Route path="detalle/:month" element={<MonthDetail />}></Route>
+              <Route path="*" element={<NotFound />}></Route>
+            </Route>
+          </Routes>
+        </SheetNamesProvider>
+      </BrowserRouter>
+    </>
   );
 }
 
